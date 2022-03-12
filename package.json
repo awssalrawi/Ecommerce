@@ -4,9 +4,9 @@
   "description": "E-commerce site using MERN",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon backend/server",
-    "production": "SET NODE_ENV=PRODUCTION& nodemon production/server"
+    "start": "SET NODE_ENV=DEVELOPMENT& nodemon backend/server",
+    "prod": "SET NODE_ENV=PRODUCTION& nodemon backend/server",
+    "seeder": "node backend/utils/seeder.js"
   },
   "repository": {
     "type": "git",
