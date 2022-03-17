@@ -16,7 +16,7 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
     if (err.name === "CastError") {
-      const message = `Resource not found. Invalid: ${error.path}`;
+      const message = `Resource not found. Invalid: ${error.path} `;
       error = new ErrorHandler(message, 400); //*bad request
     }
     //*Handling mongoose ValidationError
@@ -27,7 +27,24 @@ module.exports = (err, req, res, next) => {
       console.log(message);
       error = new ErrorHandler(message, 400);
     }
+    //*handling mongoose duplicated error
+    if (err.code === 11000) {
+      // const message = `Duplicate ${Object.keys(err.keyValue)} entered`;
+      const message = ` ${err.keyValue.email} is already registered if you have forgot your password please check the link below`;
+      //  console.log(message);
+      error = new ErrorHandler(message, 400);
+    }
 
+    //*handling wrong jwt error
+    if (err.name === "JsonWebTokenError") {
+      const message = "Json web token invalid . Try again!";
+      error = new ErrorHandler(message, 400);
+    }
+    //*handling expire jwt error
+    if (err.name === "TokenExpiredError") {
+      const message = "Json web token Expired";
+      error = new ErrorHandler(message, 400);
+    }
     res.status(error.statusCode).json({
       success: false,
       message: error.message || "Internal Server Error please try again later",
