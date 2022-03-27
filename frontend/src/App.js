@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./component/layout/Header.jsx";
-import Footer from "./component/layout/Footer.jsx";
-import Home from "./component/Home";
-import ProductDetails from "./component/product/ProductDetails";
-import Login from "./component/user/Login";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './component/layout/Header.jsx';
+import Footer from './component/layout/Footer.jsx';
+import Home from './component/Home';
+import ProductDetails from './component/product/ProductDetails';
+import Login from './component/user/Login';
+import Register from './component/user/Register';
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
             <Route path="/search/:keyword" element={<Home />} />
             <Route exact path="/product/:id" element={<ProductDetails />} />
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
           </Routes>
         </div>
         <Footer />
