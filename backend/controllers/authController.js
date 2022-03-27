@@ -1,10 +1,10 @@
-const User = require("./../models/userModel");
+const User = require('./../models/userModel');
 
-const ErrorHandler = require("./../utils/errorHandler");
-const catchAsyncError = require("./../middlewares/catchAsyncError");
-const crypto = require("crypto");
-const sendToken = require("./../utils/jwtToken");
-const sendEmail = require("./../utils/sendEmail");
+const ErrorHandler = require('./../utils/errorHandler');
+const catchAsyncError = require('./../middlewares/catchAsyncError');
+const crypto = require('crypto');
+const sendToken = require('./../utils/jwtToken');
+const sendEmail = require('./../utils/sendEmail');
 //*Register a user => /api/v1/register
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { name, password, email } = req.body;
@@ -13,8 +13,8 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     password,
     email,
     avatar: {
-      public_id: "avatar",
-      url: "https://gravatar.com/avatar/c3fc2b11598edc7f633b4ce8f4ac1897?s=400&d=robohash&r=x",
+      public_id: 'avatar',
+      url: 'https://gravatar.com/avatar/c3fc2b11598edc7f633b4ce8f4ac1897?s=400&d=robohash&r=x',
     },
   });
 
@@ -32,17 +32,17 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
   //* Checks if email and password have entered by user
   if (!email || !password) {
-    return next(new ErrorHandler("Please enter email & password", 400));
+    return next(new ErrorHandler('Please enter email & password', 400));
   }
   //* Finding user in database
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
   if (!user) {
-    return next(new ErrorHandler("Invaild email or password", 401));
+    return next(new ErrorHandler('Invalid email or password', 401));
   }
   //*check if password correct or not
   const isPasswordMatched = await user.comparePassword(password);
   if (!isPasswordMatched) {
-    return next(new ErrorHandler("Invalid email or password Iam here", 401));
+    return next(new ErrorHandler('Invalid email or password Iam here', 401));
   }
   // const token = user.getJwtToken();
 
@@ -56,13 +56,13 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
 exports.logoutUser = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
-    .cookie("token", null, {
+    .cookie('token', null, {
       expires: new Date(Date.now()),
       httpOnly: true,
     })
     .json({
       success: true,
-      message: "Logged out successfully",
+      message: 'Logged out successfully',
     });
 });
 //* Forgot password /api/v1/Password/forgot
@@ -71,7 +71,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) {
     return next(
-      new ErrorHandler("There is no user with that email address", 404)
+      new ErrorHandler('There is no user with that email address', 404)
     );
   }
   //*Send reset user
@@ -80,7 +80,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   //*create password reset url  first we have to check the protocol if http or https
   const resetUrl = `${req.protocol}://${req.get(
-    "host"
+    'host'
   )}/api/v1/password/reset/${resetToken}`;
 
   const message = `Your password reset token is as follow \n\n${resetUrl} \n\n if you have not requested this email,please ignore it`;
@@ -88,7 +88,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "ShopIt forgotten password reset",
+      subject: 'ShopIt forgotten password reset',
       message,
     });
     res.status(200).json({
@@ -106,9 +106,9 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 exports.resetPassword = catchAsyncError(async (req, res, next) => {
   //*hash url sendToken
   const resetPasswordToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(req.params.token)
-    .digest("hex");
+    .digest('hex');
   console.log(req.params.token);
 
   const user = await User.findOne({
@@ -118,11 +118,11 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new ErrorHandler("password reset token invalid or has been expired", 400)
+      new ErrorHandler('password reset token invalid or has been expired', 400)
     );
   }
   if (req.body.password !== req.body.confirmPassword) {
-    return next(new ErrorHandler("Password does not match", 400));
+    return next(new ErrorHandler('Password does not match', 400));
   }
   //*Setup new password
   user.password = req.body.password;
@@ -143,11 +143,11 @@ exports.getUserProfile = catchAsyncError(async (req, res, next) => {
 });
 //*//* update password   api/v1/Password/update
 exports.updateProduct = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id).select('+password');
   //*Check previous user password
   const isMatched = await user.comparePassword(req.body.oldPassword);
   if (!isMatched) {
-    return next(new ErrorHandler("Wrong current password", 400));
+    return next(new ErrorHandler('Wrong current password', 400));
   }
   user.password = req.body.password;
   await user.save();
