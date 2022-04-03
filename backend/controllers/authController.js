@@ -5,10 +5,10 @@ const catchAsyncError = require('./../middlewares/catchAsyncError');
 const crypto = require('crypto');
 const sendToken = require('./../utils/jwtToken');
 const sendEmail = require('./../utils/sendEmail');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary');
 //*Register a user => /api/v1/register
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-  const result = await cloudinary.uploader.upload(req.body.avatar, {
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
     folder: 'avatars', //! make sure to be included this folder in media labrary in Cloudinary
     width: 150,
     crop: 'scale',

@@ -83,13 +83,15 @@ const Register = () => {
 
       reader.onload = () => {
         if (reader.readyState === 2) {
+          // console.log(reader.result);
           setAvatarPreview(reader.result);
           setAvatar(reader.result);
         }
       };
-
+      console.log(e.target.files[0]);
       reader.readAsDataURL(e.target.files[0]);
     } else {
+      console.log(e.target.value);
       setUser({ ...user, [e.target.name]: e.target.value });
     }
   };
@@ -101,6 +103,7 @@ const Register = () => {
           <form
             className="shadow-lg"
             onSubmit={submitHandler}
+            //encType="multipart/form-data"
             encType="multipart/form-data"
           >
             <h1 className="mb-3">Register</h1>
@@ -162,7 +165,7 @@ const Register = () => {
                     accept="images/*"
                     onChange={onChange}
                   />
-                  <label className="custom-file-label" for="customFile">
+                  <label className="custom-file-label" htmlFor="customFile">
                     Choose Avatar
                   </label>
                 </div>
