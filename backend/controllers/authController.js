@@ -13,7 +13,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     width: 150,
     crop: 'scale',
   });
-  console.log('result', result.public_id);
+  //console.log('result', result.public_id);
   const { name, password, email } = req.body;
 
   const user = await User.create({
@@ -87,9 +87,8 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //*create password reset url  first we have to check the protocol if http or https
-  const resetUrl = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/password/reset/${resetToken}`;
+  // const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
 
   const message = `Your password reset token is as follow \n\n${resetUrl} \n\n if you have not requested this email,please ignore it`;
 
@@ -157,7 +156,7 @@ exports.updateProduct = catchAsyncError(async (req, res, next) => {
   if (!isMatched) {
     return next(new ErrorHandler('Wrong current password', 400));
   }
-  user.password = req.body.password;
+  user.password = req.body.newPassword;
   await user.save();
   sendToken(user, 200, res);
 });
@@ -168,7 +167,23 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
     email: req.body.email,
   };
   //*update avatar profile
-  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+  if (req.body.avatar !== '') {
+    const user = await User.findById(req.user.id);
+    const image_id = user.avatar.public_id;
+    await cloudinary.v2.uploader.destroy(image_id);
+
+    const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: 'avatars', //! make sure to be included this folder in media labrary in Cloudinary
+      width: 150,
+      crop: 'scale',
+    });
+
+    newUserData.avatar = {
+      public_id: result.public_id,
+      url: result.secure_url,
+    };
+  }
+  await User.findByIdAndUpdate(req.user.id, newUserData, {
     new: true,
     runValidators: true,
   });

@@ -11,6 +11,7 @@ const Header = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -32,19 +33,19 @@ const Header = () => {
         </div>
 
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
-          <Link to="/card" style={{ textDecoration: 'none' }}>
+          <Link to="/cart" style={{ textDecoration: 'none' }}>
             <span id="cart" className="ml-3">
               Cart
             </span>
             <span className="ml-1" id="cart_count">
-              2
+              {cartItems.length}
             </span>
           </Link>
           {user ? (
             <div className="ml-4 dropdown d-inline">
               <Link
                 to="#!"
-                className="btn dropdown-toggle text-white"
+                className="btn dropdown-toggle text-white mr-4"
                 type="button"
                 id="dropDownMenuButton"
                 data-toggle="dropdown"
