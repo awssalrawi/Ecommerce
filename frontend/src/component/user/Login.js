@@ -5,7 +5,7 @@ import Loader from '../layout/Loader';
 import MetaData from '../layout/MetaData';
 import { Link } from 'react-router-dom';
 import { login, clearErrors } from './../../actions/userActions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,16 +17,18 @@ const Login = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const redirect = location.search ? location.search.split('=')[1] : '/';
+  console.log('location.search', location);
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate(redirect);
     }
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, isAuthenticated, error, loading, navigate]);
+  }, [dispatch, alert, isAuthenticated, error, loading, navigate, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();

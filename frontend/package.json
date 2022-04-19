@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.7.1",
+    "@stripe/stripe-js": "^1.27.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
+    "countries-list": "^2.6.1",
+    "mdbreact": "^5.2.0",
     "rc-slider": "^9.7.5",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
@@ -47,5 +51,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:4000"
+  "proxy": "http://localhost:4000"
 }

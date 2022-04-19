@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 import MetaData from './../layout/MetaData';
 import { addItemToCart, removeItemToCart } from '../../actions/cartActions';
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.cart);
   const increaseQty = (id, quantity, stock) => {
     const newQty = quantity + 1;
@@ -21,12 +22,14 @@ const Cart = () => {
   const removeCartItemHandler = (id) => {
     dispatch(removeItemToCart(id));
   };
-
+  const checkoutHandler = () => {
+    navigate('/login?redirect=/shipping');
+  };
   return (
     <Fragment>
       <MetaData title={'Your Cart'} />
       {cartItems.length === 0 ? (
-        <h2 classNameName="mt-5">Your Cart is empty</h2>
+        <h2 className="mt-5 ">Your Cart is empty</h2>
       ) : (
         <Fragment>
           <h2 className="mt-5">
@@ -132,7 +135,11 @@ const Cart = () => {
                 </p>
 
                 <hr />
-                <button id="checkout_btn" className="btn btn-primary btn-block">
+                <button
+                  id="checkout_btn"
+                  className="btn btn-primary btn-block"
+                  onClick={checkoutHandler}
+                >
                   Check out
                 </button>
               </div>
